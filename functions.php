@@ -27,20 +27,22 @@ function formatbody($body,$ppath,&$garr){
     if($matches && $matches[1]){
         $tmp=explode("<br>",$matches[1]);
         foreach($tmp as $item){
+            if (stripos($item,"To Parent Directory")){
+                continue;
+            }
             $type="file";
             if(stripos($item,"dir")>0){
                 $type="dir";
-            }else if (stripos($item,"To Parent Directory")){
-                     continue;
             }
             preg_match("/<a\s*href=\"(.*?)\">(.*?)<\/a>/is", $item, $links);
             if(count($links)==3){
                 $name=$links[2];
                 $path=$links[1];
-                $garr[$ppath][]=array(
+                $garr[$ppath][md5]=array(
                     "type"=>$type,
                     "filename"=>$name,
-                    "path"=>$path
+                    "path"=>$path,
+                    "childrens"=>array()
                 );
             }
         }
